@@ -46,11 +46,6 @@ const routes = [
         component: () => import('../views/customer/FeedbackView.vue')
       },
       {
-        path: 'feedback-history',
-        name: 'FeedbackHistory',
-        component: () => import('../views/customer/FeedbackHistoryView.vue')
-      },
-      {
         path: 'bookings',
         name: 'BookingManagement',
         component: () => import('../views/customer/BookingManagementView.vue')
