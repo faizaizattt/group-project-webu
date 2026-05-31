@@ -133,20 +133,36 @@
             <p class="review-text" style="font-size: 0.85rem; font-style: italic; background: #f8fafc; padding: 0.75rem; border-radius: var(--radius-sm);">
               "{{ rev.comment }}"
             </p>
-            <div style="font-size: 0.75rem; font-weight: 700; color: var(--primary-dark);">
-              Vehicle Driven: {{ rev.car || 'Standard Class Utility' }}
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; font-size: 0.75rem;">
+              <div style="font-weight: 700; color: var(--primary-dark);">
+                Vehicle Driven: {{ rev.car || 'Standard Class Utility' }}
+              </div>
+              <button 
+                @click="handleDelete(rev.id)" 
+                class="btn-delete-admin"
+                title="Delete this review"
+              >
+                🗑️ Delete
+              </button>
             </div>
           </div>
         </div>
       </div>
 
     </div>
+
+    <!-- Reactive Toast Notification -->
+    <div class="toast-container">
+      <div v-for="toast in toasts" :key="toast.id" class="toast" :class="`toast-${toast.type}`">
+        <span>{{ toast.text }}</span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
-import { feedbacks, totalRevenue, averageRating, ratingBreakdown } from '../../utils/mockData';
+import { feedbacks, totalRevenue, averageRating, ratingBreakdown, deleteFeedback } from '../../utils/mockData';
 
 const selectedRatingFilter = ref('');
 
@@ -168,4 +184,91 @@ const filteredReviews = computed(() => {
   const targetStars = parseInt(selectedRatingFilter.value);
   return feedbacks.value.filter(f => f.stars === targetStars);
 });
+
+// Toast notification handlers
+const toasts = ref([]);
+const addToast = (text, type = 'success') => {
+  const id = Date.now();
+  toasts.value.push({ id, text, type });
+  setTimeout(() => {
+    toasts.value = toasts.value.filter(t => t.id !== id);
+  }, 4000);
+};
+
+// Delete handler
+const handleDelete = async (feedbackId) => {
+  if (confirm('Are you sure you want to delete this review? This action cannot be undone.')) {
+    try {
+      await deleteFeedback(feedbackId);
+      addToast('Review deleted successfully!', 'success');
+    } catch (error) {
+      addToast('Failed to delete review. Please try again.', 'danger');
+    }
+  }
+};
 </script>
+
+<style scoped>
+/* Admin Delete Button */
+.btn-delete-admin {
+  background: transparent;
+  border: 1px solid var(--status-danger);
+  color: var(--status-danger);
+  padding: 0.25rem 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  outline: none;
+}
+
+.btn-delete-admin:hover {
+  background: var(--status-danger-bg);
+  transform: translateY(-1px);
+}
+
+/* Toast container positioning */
+.toast-container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.toast {
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius-sm);
+  color: var(--white);
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: var(--shadow-lg);
+  animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 300px;
+}
+
+.toast-success {
+  background-color: var(--status-success);
+}
+
+.toast-danger {
+  background-color: var(--status-danger);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(1rem);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+</style>

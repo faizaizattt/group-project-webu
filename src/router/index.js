@@ -32,8 +32,8 @@ const routes = [
       },
       {
         path: 'feedback',
-        name: 'SubmitFeedback',
-        component: () => import('../views/customer/SubmitFeedbackView.vue')
+        name: 'Feedback',
+        component: () => import('../views/customer/FeedbackView.vue')
       },
       {
         path: 'feedback-history',

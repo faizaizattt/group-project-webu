@@ -26,10 +26,7 @@
             📅 Manage Bookings
           </router-link>
           <router-link to="/customer/feedback" class="nav-link">
-            ✍ Submit Feedback
-          </router-link>
-          <router-link to="/customer/feedback-history" class="nav-link">
-            📂 Feedback History
+            💬 Feedback
           </router-link>
         </div>
 

@@ -108,6 +108,31 @@ export const addFeedback = async (feedbackPayload) => {
   return newFdb;
 };
 
+export const updateFeedback = async (feedbackId, updatedPayload) => {
+  await new Promise(resolve => setTimeout(resolve, 800)); // Mimic API delay
+  const idx = feedbacks.value.findIndex(f => f.id === feedbackId);
+  if (idx !== -1) {
+    feedbacks.value[idx] = {
+      ...feedbacks.value[idx],
+      ...updatedPayload,
+      date: new Date().toISOString().split('T')[0]
+    };
+    feedbacks.value = [...feedbacks.value];
+    return feedbacks.value[idx];
+  }
+  throw new Error('Feedback not found');
+};
+
+export const deleteFeedback = async (feedbackId) => {
+  await new Promise(resolve => setTimeout(resolve, 500)); // Mimic API delay
+  const idx = feedbacks.value.findIndex(f => f.id === feedbackId);
+  if (idx !== -1) {
+    feedbacks.value = feedbacks.value.filter(f => f.id !== feedbackId);
+    return true;
+  }
+  throw new Error('Feedback not found');
+};
+
 export const clearPayment = async (paymentId) => {
   await new Promise(resolve => setTimeout(resolve, 500));
   const pay = payments.value.find(p => p.id === paymentId);
