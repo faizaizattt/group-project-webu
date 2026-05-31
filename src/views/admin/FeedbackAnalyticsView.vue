@@ -17,7 +17,7 @@
         </div>
         <div class="metric-info">
           <span class="metric-label">Total Cleared Revenue</span>
-          <span class="metric-value">${{ totalRevenue.toFixed(2) }}</span>
+          <span class="metric-value">RM{{ totalRevenue.toFixed(2) }}</span>
         </div>
       </div>
 

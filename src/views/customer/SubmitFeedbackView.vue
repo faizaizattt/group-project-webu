@@ -28,7 +28,7 @@
             </div>
             <div style="text-align: right;">
               <div style="font-size: 0.8rem; color: var(--text-light); text-transform: uppercase; font-weight: 700;">Amount Paid</div>
-              <div style="font-size: 1.5rem; font-weight: 800; color: var(--primary);">${{ activeBooking.totalAmount.toFixed(2) }}</div>
+              <div style="font-size: 1.5rem; font-weight: 800; color: var(--primary);">RM{{ activeBooking.totalAmount.toFixed(2) }}</div>
               <div style="font-size: 0.8rem; color: var(--text-muted);">Returned on {{ activeBooking.date }}</div>
             </div>
           </div>

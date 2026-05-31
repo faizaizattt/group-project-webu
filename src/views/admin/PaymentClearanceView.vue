@@ -48,7 +48,7 @@
               <th>ID</th>
               <th>Booking ID</th>
               <th>Date Filed</th>
-              <th>Amount ($)</th>
+              <th>Amount (RM)</th>
               <th>Method</th>
               <th>Verification / Reference Memo</th>
               <th>Status</th>
@@ -66,7 +66,7 @@
               <td style="font-weight: 800; font-family: monospace;">{{ pay.id }}</td>
               <td style="font-weight: 700; color: var(--primary-dark);">{{ pay.bookingId }}</td>
               <td>{{ pay.date }}</td>
-              <td style="font-weight: 700;">${{ pay.amount.toFixed(2) }}</td>
+              <td style="font-weight: 700;">RM{{ pay.amount.toFixed(2) }}</td>
               <td>{{ pay.method }}</td>
               <td style="font-size: 0.85rem; color: var(--text-muted); font-style: italic;">
                 {{ pay.details }}

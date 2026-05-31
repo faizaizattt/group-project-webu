@@ -38,7 +38,7 @@
                   <td>{{ pay.bookingId }}</td>
                   <td>{{ pay.date }}</td>
                   <td>{{ pay.method }}</td>
-                  <td style="font-weight: 600; color: var(--primary-dark);">${{ pay.amount.toFixed(2) }}</td>
+                  <td style="font-weight: 600; color: var(--primary-dark);">RM{{ pay.amount.toFixed(2) }}</td>
                   <td>
                     <span class="badge" :class="`badge-${pay.status}`">
                       {{ pay.status }}
@@ -91,7 +91,7 @@
 
             <!-- Amount Input -->
             <div class="form-group">
-              <label class="form-label" for="amount">Payment Amount ($)</label>
+              <label class="form-label" for="amount">Payment Amount (RM)</label>
               <input 
                 type="text" 
                 id="amount" 
@@ -210,7 +210,7 @@
 
         <div class="receipt-total">
           <span>TOTAL AMOUNT PAID</span>
-          <span>${{ activeReceipt.amount.toFixed(2) }}</span>
+          <span>RM{{ activeReceipt.amount.toFixed(2) }}</span>
         </div>
 
         <div style="margin-top: 1.5rem; text-align: center; font-size: 0.75rem; color: var(--text-muted); border-top: 1px dotted var(--border-color); padding-top: 1rem;">
@@ -353,7 +353,7 @@ const submitForm = async () => {
     // Call simulated async hook database
     const response = await addPayment(payload);
     
-    addToast(`Payment of $${response.amount.toFixed(2)} submitted successfully! ID: ${response.id}`, 'success');
+    addToast(`Payment of RM${response.amount.toFixed(2)} submitted successfully! ID: ${response.id}`, 'success');
     resetForm();
   } catch (error) {
     triggerFormShake();

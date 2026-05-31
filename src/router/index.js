@@ -22,9 +22,19 @@ const routes = [
   // Customer Views
   {
     path: '/customer',
-    redirect: '/customer/payments',
+    redirect: '/customer/cars',
     meta: { requiresAuth: true, role: 'customer' },
     children: [
+      {
+        path: 'cars',
+        name: 'BrowseCars',
+        component: () => import('../views/customer/BrowseCarsView.vue')
+      },
+      {
+        path: 'cars/:id',
+        name: 'CarDetail',
+        component: () => import('../views/customer/CarDetailView.vue')
+      },
       {
         path: 'payments',
         name: 'MyPayments',
@@ -45,9 +55,19 @@ const routes = [
   // Admin Views
   {
     path: '/admin',
-    redirect: '/admin/clearance',
+    redirect: '/admin/dashboard',
     meta: { requiresAuth: true, role: 'admin' },
     children: [
+      {
+        path: 'dashboard',
+        name: 'AdminDashboard',
+        component: () => import('../views/admin/AdminDashboardView.vue')
+      },
+      {
+        path: 'cars',
+        name: 'CarManagement',
+        component: () => import('../views/admin/CarManagementView.vue')
+      },
       {
         path: 'clearance',
         name: 'PaymentClearanceLog',
@@ -89,9 +109,9 @@ router.beforeEach((to, from, next) => {
       if (requiredRole && user.role !== requiredRole) {
         // Role mismatch, redirect to appropriate default route
         if (user.role === 'admin') {
-          next({ name: 'PaymentClearanceLog' });
+          next({ name: 'AdminDashboard' });
         } else {
-          next({ name: 'MyPayments' });
+          next({ name: 'BrowseCars' });
         }
       } else {
         next();
@@ -101,9 +121,9 @@ router.beforeEach((to, from, next) => {
     if (user) {
       // User is already logged in, redirect away from guest-only pages
       if (user.role === 'admin') {
-        next({ name: 'PaymentClearanceLog' });
+        next({ name: 'AdminDashboard' });
       } else {
-        next({ name: 'MyPayments' });
+        next({ name: 'BrowseCars' });
       }
     } else {
       next();

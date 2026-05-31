@@ -13,12 +13,15 @@
     <div v-else-if="user.role === 'customer'">
       <!-- Customer Sticky Navbar -->
       <nav class="customer-navbar">
-        <router-link to="/customer/payments" class="logo-container">
+        <router-link to="/customer/cars" class="logo-container">
           <div class="logo-icon">🚗</div>
           <span>BlueDrive</span>
         </router-link>
 
         <div class="customer-nav-links">
+          <router-link to="/customer/cars" class="nav-link">
+            🚘 Browse Cars
+          </router-link>
           <router-link to="/customer/payments" class="nav-link">
             💵 My Payments
           </router-link>
@@ -67,6 +70,12 @@
         </div>
 
         <nav class="admin-nav-links">
+          <router-link to="/admin/dashboard" class="admin-nav-link">
+            📊 Overview Dashboard
+          </router-link>
+          <router-link to="/admin/cars" class="admin-nav-link">
+            🚘 Car Inventory
+          </router-link>
           <router-link to="/admin/clearance" class="admin-nav-link">
             ⚙ Payment Clearance Log
           </router-link>
