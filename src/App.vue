@@ -41,6 +41,9 @@
           <div class="user-avatar">
             C
           </div>
+          <router-link :to="{ name: 'Profile' }" class="nav-link" style="padding: 0.4rem 0.8rem; margin-right: 0.5rem;">
+            👤 My Profile
+          </router-link>
           <button @click="handleLogout" class="btn-logout">
             Logout
           </button>
@@ -82,6 +85,9 @@
           <router-link to="/admin/rentals" class="admin-nav-link">
             🚗 Rental Processing
           </router-link>
+          <router-link :to="{ name: 'CustomerManagement' }" class="admin-nav-link">
+            👥 Customers
+          </router-link>
           <router-link to="/admin/analytics" class="admin-nav-link">
             📈 Feedback Analytics
           </router-link>
@@ -97,6 +103,10 @@
               <span class="admin-user-role">admin@bluedrive.com</span>
             </div>
           </div>
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 0.5rem 0;" />
+          <router-link :to="{ name: 'Profile' }" class="admin-nav-link" style="margin-bottom: 0.5rem; justify-content: center;">
+            👤 My Profile
+          </router-link>
           <button @click="handleLogout" class="btn btn-outline btn-sm" style="width: 100%; text-align: center; display: block; font-weight: 500;">
             🚪 Exit Admin Panel
           </button>

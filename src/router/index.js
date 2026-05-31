@@ -85,6 +85,20 @@ const routes = [
       }
     ]
   },
+  // Admin-only (Customer Management)
+  {
+    path: '/admin/customers',
+    name: 'CustomerManagement',
+    component: () => import('../views/admin/CustomerManagementView.vue'),
+    meta: { requiresAuth: true, role: 'admin' }
+  },
+  // Shared — both roles can access
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: () => import('../views/ProfileView.vue'),
+    meta: { requiresAuth: true }
+  },
   // Catch All Route
   {
     path: '/:pathMatch(.*)*',

@@ -1,4 +1,5 @@
 import { ref, computed } from 'vue';
+import { currentUser } from './session.js';
 
 // ──────────────────────────────────────────────
 //  PAYMENTS DATA (existing)
@@ -248,6 +249,14 @@ export const feedbacks = ref(feedbackData);
 export const cars = ref(carsData);
 export const bookings = ref(bookingsData);
 
+export const customers = ref([
+  { id: 2, name: 'John Doe', email: 'john@example.com', 
+    phone: '+1234567890', joinDate: '2026-01-15', totalBookings: 3 },
+  { id: 3, name: 'Jane Smith', email: 'jane@example.com', 
+    phone: '+1234567891', joinDate: '2026-02-20', totalBookings: 1 },
+  { id: 4, name: 'Mike Johnson', email: 'mike@example.com', 
+    phone: '+1234567892', joinDate: '2026-03-10', totalBookings: 2 },
+]);
 // Active booking that is pending review for the Customer's Submit Feedback page
 export const activeBookingPendingFeedback = ref({
   bookingId: 'BKG-7492',
@@ -580,4 +589,57 @@ export const mockData = {
   cars: mockCarsData,
   bookings: mockBookingsData,
   rentals: rentalsData
+};
+
+// ──────────────────────────────────────────────
+//  CUSTOMER & PROFILE METHODS (new)
+// ──────────────────────────────────────────────
+export const addCustomer = async (payload) => {
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  const newCustomer = {
+    id: Date.now(),
+    joinDate: new Date().toISOString().split('T')[0],
+    totalBookings: 0,
+    ...payload
+  };
+  customers.value = [newCustomer, ...customers.value];
+  return newCustomer;
+};
+
+export const updateCustomer = async (id, payload) => {
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  const idx = customers.value.findIndex(c => c.id === id);
+  if (idx !== -1) {
+    customers.value[idx] = { ...customers.value[idx], ...payload };
+    customers.value = [...customers.value];
+    return customers.value[idx];
+  }
+  throw new Error('Customer not found');
+};
+
+export const deleteCustomer = async (id) => {
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  const idx = customers.value.findIndex(c => c.id === id);
+  if (idx !== -1) {
+    customers.value = customers.value.filter(c => c.id !== id);
+    return true;
+  }
+  throw new Error('Customer not found');
+};
+
+export const updateCurrentUserProfile = async (payload) => {
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  if (!currentUser.value) throw new Error('No active session');
+  
+  if (currentUser.value.id) {
+    const idx = customers.value.findIndex(c => c.id === currentUser.value.id);
+    if (idx !== -1) {
+      customers.value[idx] = { ...customers.value[idx], ...payload };
+      customers.value = [...customers.value];
+    }
+  }
+
+  currentUser.value = { ...currentUser.value, ...payload };
+  localStorage.setItem('user_session', JSON.stringify(currentUser.value));
+  return currentUser.value;
 };
