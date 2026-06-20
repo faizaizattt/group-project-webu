@@ -143,9 +143,9 @@ const handleLogin = async () => {
     
     // Redirect based on Authenticated Role
     if (user.role === 'admin') {
-      router.push({ name: 'PaymentClearanceLog' });
+      router.push({ name: 'AdminDashboard' });
     } else {
-      router.push({ name: 'MyPayments' });
+      router.push({ name: 'BrowseCars' });
     }
   } catch (err) {
     triggerErrorEffect();

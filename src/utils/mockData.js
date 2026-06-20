@@ -1,6 +1,9 @@
 import { ref, computed } from 'vue';
+import { currentUser } from './session.js';
 
-// Pre-populate with realistic, modern mock data
+// ──────────────────────────────────────────────
+//  PAYMENTS DATA (existing)
+// ──────────────────────────────────────────────
 const paymentsData = [
   {
     id: 'PAY-1001',
@@ -40,6 +43,9 @@ const paymentsData = [
   }
 ];
 
+// ──────────────────────────────────────────────
+//  FEEDBACK DATA (existing)
+// ──────────────────────────────────────────────
 const feedbackData = [
   {
     id: 'FDB-201',
@@ -70,10 +76,187 @@ const feedbackData = [
   }
 ];
 
-// Reactive states
+// ──────────────────────────────────────────────
+//  CAR FLEET DATA (new)
+// ──────────────────────────────────────────────
+const carsData = [
+  {
+    id: 'CAR-001',
+    name: 'Model 3 Long Range',
+    brand: 'Tesla',
+    category: 'Electric',
+    year: 2025,
+    pricePerDay: 89.00,
+    seats: 5,
+    transmission: 'Automatic',
+    fuelType: 'Electric',
+    available: true,
+    imageUrl: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?q=80&w=800&auto=format&fit=crop',
+    features: ['Autopilot', 'Premium Audio', 'Heated Seats', 'Glass Roof', 'Supercharger Access'],
+    description: 'Experience the future of driving with this all-electric sedan. The Model 3 Long Range offers an impressive 358-mile range, lightning-fast acceleration, and the most advanced autopilot features available.'
+  },
+  {
+    id: 'CAR-002',
+    name: '3 Series 330i',
+    brand: 'BMW',
+    category: 'Sedan',
+    year: 2025,
+    pricePerDay: 75.00,
+    seats: 5,
+    transmission: 'Automatic',
+    fuelType: 'Petrol',
+    available: true,
+    imageUrl: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=800&auto=format&fit=crop',
+    features: ['Sport Package', 'Leather Interior', 'Navigation', 'Parking Sensors', 'Apple CarPlay'],
+    description: 'The ultimate driving machine. This BMW 3 Series combines athletic agility with refined luxury, featuring a turbocharged engine that delivers exhilarating performance on every drive.'
+  },
+  {
+    id: 'CAR-003',
+    name: 'Camry XSE',
+    brand: 'Toyota',
+    category: 'Sedan',
+    year: 2026,
+    pricePerDay: 52.00,
+    seats: 5,
+    transmission: 'Automatic',
+    fuelType: 'Hybrid',
+    available: true,
+    imageUrl: 'https://platform.cstatic-images.com/in/v2/stock_photos/d2d23f58-b525-4eb3-826c-eab83b8b616f/c763b801-5d75-492d-87c6-9cf50427ecd3.png',
+    features: ['Hybrid Engine', 'Toyota Safety Sense', 'Wireless Charging', 'JBL Audio', 'Panoramic Roof'],
+    description: 'The most popular sedan just got better. The Camry XSE Hybrid delivers exceptional fuel economy without sacrificing driving excitement, wrapped in a stunning sport-tuned design.'
+  },
+  {
+    id: 'CAR-004',
+    name: 'Explorer ST',
+    brand: 'Ford',
+    category: 'SUV',
+    year: 2025,
+    pricePerDay: 95.00,
+    seats: 7,
+    transmission: 'Automatic',
+    fuelType: 'Petrol',
+    available: false,
+    imageUrl: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=800&auto=format&fit=crop',
+    features: ['3rd Row Seating', 'B&O Sound', '360° Camera', 'Adaptive Cruise', 'Tow Package'],
+    description: 'Command the road in this powerful 7-seat SUV. The Explorer ST features a twin-turbo V6 engine, sport-tuned suspension, and enough space for the whole family and all their gear.'
+  },
+  {
+    id: 'CAR-005',
+    name: 'A4 Premium Plus',
+    brand: 'Audi',
+    category: 'Luxury',
+    year: 2025,
+    pricePerDay: 110.00,
+    seats: 5,
+    transmission: 'Automatic',
+    fuelType: 'Petrol',
+    available: true,
+    imageUrl: 'https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?q=80&w=800&auto=format&fit=crop',
+    features: ['Quattro AWD', 'Virtual Cockpit', 'Bang & Olufsen Audio', 'Matrix LED', 'Sport Seats'],
+    description: 'Sophistication meets performance. The Audi A4 Premium Plus features Quattro all-wheel drive, a stunning virtual cockpit display, and the finest interior craftsmanship in its class.'
+  },
+  {
+    id: 'CAR-006',
+    name: 'Grand Cherokee L',
+    brand: 'Jeep',
+    category: 'SUV',
+    year: 2026,
+    pricePerDay: 105.00,
+    seats: 7,
+    transmission: 'Automatic',
+    fuelType: 'Diesel',
+    available: true,
+    imageUrl: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=800&auto=format&fit=crop',
+    features: ['4x4 System', 'Air Suspension', 'McIntosh Audio', 'Night Vision', 'Head-Up Display'],
+    description: 'Legendary capability meets modern luxury. The Grand Cherokee L offers unmatched off-road prowess with three rows of premium comfort and the most advanced technology in its segment.'
+  },
+  {
+    id: 'CAR-008',
+    name: 'Mustang GT',
+    brand: 'Ford',
+    category: 'Sports',
+    year: 2025,
+    pricePerDay: 120.00,
+    seats: 4,
+    transmission: 'Manual',
+    fuelType: 'Petrol',
+    available: false,
+    imageUrl: 'https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?q=80&w=800&auto=format&fit=crop',
+    features: ['5.0L V8', 'Performance Pack', 'MagneRide', 'Launch Control', 'Recaro Seats'],
+    description: 'An American icon reborn. The Mustang GT delivers pure muscle car thrills with its naturally aspirated 5.0L V8, producing 480 horsepower of unbridled excitement.'
+  }
+];
+
+// ──────────────────────────────────────────────
+//  BOOKINGS DATA (new)
+// ──────────────────────────────────────────────
+const bookingsData = [
+  {
+    id: 'BKG-9281',
+    carId: 'CAR-001',
+    carName: 'Tesla Model 3 Long Range',
+    customerName: 'Sarah Jenkins',
+    phone: '+63 917 123 4567',
+    pickupDate: '2026-05-25',
+    returnDate: '2026-05-28',
+    totalPrice: 267.00,
+    status: 'completed',
+    specialRequests: 'Need child seat installed'
+  },
+  {
+    id: 'BKG-7492',
+    carId: 'CAR-005',
+    carName: 'Audi A4 Premium Plus',
+    customerName: 'Emily Chen',
+    phone: '+63 918 555 0199',
+    pickupDate: '2026-05-30',
+    returnDate: '2026-06-02',
+    totalPrice: 330.00,
+    status: 'active',
+    specialRequests: ''
+  },
+  {
+    id: 'BKG-6610',
+    carId: 'CAR-002',
+    carName: 'BMW 3 Series 330i',
+    customerName: 'David Vance',
+    phone: '+63 919 321 8888',
+    pickupDate: '2026-05-22',
+    returnDate: '2026-05-26',
+    totalPrice: 300.00,
+    status: 'completed',
+    specialRequests: 'Airport pickup required'
+  },
+  {
+    id: 'BKG-8831',
+    carId: 'CAR-004',
+    carName: 'Ford Explorer ST',
+    customerName: 'Michael Brody',
+    phone: '+63 920 112 3344',
+    pickupDate: '2026-05-28',
+    returnDate: '2026-05-30',
+    totalPrice: 190.00,
+    status: 'completed',
+    specialRequests: 'GPS navigation required'
+  }
+];
+
+// ──────────────────────────────────────────────
+//  REACTIVE STATES
+// ──────────────────────────────────────────────
 export const payments = ref(paymentsData);
 export const feedbacks = ref(feedbackData);
+export const cars = ref(carsData);
+export const bookings = ref(bookingsData);
 
+export const customers = ref([
+  { id: 2, name: 'John Doe', email: 'john@example.com', 
+    phone: '+1234567890', joinDate: '2026-01-15', totalBookings: 3 },
+  { id: 3, name: 'Jane Smith', email: 'jane@example.com', 
+    phone: '+1234567891', joinDate: '2026-02-20', totalBookings: 1 },
+  { id: 4, name: 'Mike Johnson', email: 'mike@example.com', 
+    phone: '+1234567892', joinDate: '2026-03-10', totalBookings: 2 },
+]);
 // Active booking that is pending review for the Customer's Submit Feedback page
 export const activeBookingPendingFeedback = ref({
   bookingId: 'BKG-7492',
@@ -82,7 +265,9 @@ export const activeBookingPendingFeedback = ref({
   totalAmount: 150.50
 });
 
-// Methods simulating API calls with async/await payload structures
+// ──────────────────────────────────────────────
+//  PAYMENT METHODS (existing)
+// ──────────────────────────────────────────────
 export const addPayment = async (paymentPayload) => {
   await new Promise(resolve => setTimeout(resolve, 1000)); // Mimic API delay
   const newPay = {
@@ -149,11 +334,116 @@ export const flagPayment = async (paymentId) => {
   }
 };
 
-// Computed Analytics for Dashboard
+// ──────────────────────────────────────────────
+//  CAR METHODS (new)
+// ──────────────────────────────────────────────
+export const fetchCars = async (filters = {}) => {
+  await new Promise(resolve => setTimeout(resolve, 600));
+  let result = [...cars.value];
+
+  if (filters.search) {
+    const q = filters.search.toLowerCase();
+    result = result.filter(c =>
+      c.name.toLowerCase().includes(q) ||
+      c.brand.toLowerCase().includes(q) ||
+      c.category.toLowerCase().includes(q)
+    );
+  }
+  if (filters.category && filters.category !== 'all') {
+    result = result.filter(c => c.category === filters.category);
+  }
+  if (filters.transmission && filters.transmission !== 'all') {
+    result = result.filter(c => c.transmission === filters.transmission);
+  }
+  if (filters.fuelType && filters.fuelType !== 'all') {
+    result = result.filter(c => c.fuelType === filters.fuelType);
+  }
+  if (filters.availableOnly) {
+    result = result.filter(c => c.available);
+  }
+  if (filters.sort === 'price-asc') {
+    result.sort((a, b) => a.pricePerDay - b.pricePerDay);
+  } else if (filters.sort === 'price-desc') {
+    result.sort((a, b) => b.pricePerDay - a.pricePerDay);
+  } else if (filters.sort === 'name') {
+    result.sort((a, b) => a.name.localeCompare(b.name));
+  } else if (filters.sort === 'year') {
+    result.sort((a, b) => b.year - a.year);
+  }
+
+  return result;
+};
+
+export const fetchCarById = async (id) => {
+  await new Promise(resolve => setTimeout(resolve, 400));
+  return cars.value.find(c => c.id === id) || null;
+};
+
+export const addCar = async (carPayload) => {
+  await new Promise(resolve => setTimeout(resolve, 800));
+  const newCar = {
+    id: `CAR-${String(cars.value.length + 1).padStart(3, '0')}`,
+    available: true,
+    ...carPayload
+  };
+  cars.value = [newCar, ...cars.value];
+  return newCar;
+};
+
+export const updateCar = async (carId, updates) => {
+  await new Promise(resolve => setTimeout(resolve, 800));
+  const idx = cars.value.findIndex(c => c.id === carId);
+  if (idx !== -1) {
+    cars.value[idx] = { ...cars.value[idx], ...updates };
+    // Trigger reactivity
+    cars.value = [...cars.value];
+    return cars.value[idx];
+  }
+  return null;
+};
+
+export const deleteCar = async (carId) => {
+  await new Promise(resolve => setTimeout(resolve, 600));
+  cars.value = cars.value.filter(c => c.id !== carId);
+  return true;
+};
+
+export const toggleCarAvailability = async (carId) => {
+  await new Promise(resolve => setTimeout(resolve, 400));
+  const car = cars.value.find(c => c.id === carId);
+  if (car) {
+    car.available = !car.available;
+    cars.value = [...cars.value];
+    return car;
+  }
+  return null;
+};
+
+// ──────────────────────────────────────────────
+//  BOOKING METHODS (new)
+// ──────────────────────────────────────────────
+export const createBooking = async (bookingPayload) => {
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  const newBooking = {
+    id: `BKG-${Math.floor(1000 + Math.random() * 9000)}`,
+    status: 'active',
+    ...bookingPayload
+  };
+  bookings.value = [newBooking, ...bookings.value];
+  return newBooking;
+};
+
+// ──────────────────────────────────────────────
+//  COMPUTED ANALYTICS (existing + new)
+// ──────────────────────────────────────────────
 export const totalRevenue = computed(() => {
   return payments.value
     .filter(p => p.status === 'paid')
     .reduce((sum, p) => sum + parseFloat(p.amount), 0);
+});
+
+export const pendingClearancesCount = computed(() => {
+  return payments.value.filter(p => p.status === 'pending').length;
 });
 
 export const averageRating = computed(() => {
@@ -172,6 +462,23 @@ export const ratingBreakdown = computed(() => {
   return breakdown;
 });
 
+// Car analytics (new)
+export const totalCarsCount = computed(() => cars.value.length);
+export const availableCarsCount = computed(() => cars.value.filter(c => c.available).length);
+export const totalBookingsCount = computed(() => bookings.value.length);
+export const averageCarPrice = computed(() => {
+  if (cars.value.length === 0) return 0;
+  const sum = cars.value.reduce((total, c) => total + c.pricePerDay, 0);
+  return parseFloat((sum / cars.value.length).toFixed(2));
+});
+export const categoryBreakdown = computed(() => {
+  const breakdown = {};
+  cars.value.forEach(c => {
+    breakdown[c.category] = (breakdown[c.category] || 0) + 1;
+  });
+  return breakdown;
+});
+
 // Mock data for Booking Management and Rental Processing
 const customersData = [
   { id: 1, name: 'John Doe', email: 'john@example.com', phone: '555-0101' },
@@ -181,7 +488,7 @@ const customersData = [
   { id: 5, name: 'Robert Wilson', email: 'robert@example.com', phone: '555-0105' }
 ];
 
-const carsData = [
+const mockCarsData = [
   { id: 1, brand: 'Toyota', model: 'Corolla', pricePerDay: 50, status: 'available' },
   { id: 2, brand: 'Honda', model: 'Civic', pricePerDay: 55, status: 'available' },
   { id: 3, brand: 'BMW', model: '3 Series', pricePerDay: 100, status: 'available' },
@@ -191,7 +498,7 @@ const carsData = [
   { id: 7, brand: 'Mercedes', model: 'C-Class', pricePerDay: 120, status: 'available' }
 ];
 
-const bookingsData = [
+const mockBookingsData = [
   {
     id: 1,
     customerId: 1,
@@ -279,7 +586,60 @@ const rentalsData = [
 
 export const mockData = {
   customers: customersData,
-  cars: carsData,
-  bookings: bookingsData,
+  cars: mockCarsData,
+  bookings: mockBookingsData,
   rentals: rentalsData
+};
+
+// ──────────────────────────────────────────────
+//  CUSTOMER & PROFILE METHODS (new)
+// ──────────────────────────────────────────────
+export const addCustomer = async (payload) => {
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  const newCustomer = {
+    id: Date.now(),
+    joinDate: new Date().toISOString().split('T')[0],
+    totalBookings: 0,
+    ...payload
+  };
+  customers.value = [newCustomer, ...customers.value];
+  return newCustomer;
+};
+
+export const updateCustomer = async (id, payload) => {
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  const idx = customers.value.findIndex(c => c.id === id);
+  if (idx !== -1) {
+    customers.value[idx] = { ...customers.value[idx], ...payload };
+    customers.value = [...customers.value];
+    return customers.value[idx];
+  }
+  throw new Error('Customer not found');
+};
+
+export const deleteCustomer = async (id) => {
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  const idx = customers.value.findIndex(c => c.id === id);
+  if (idx !== -1) {
+    customers.value = customers.value.filter(c => c.id !== id);
+    return true;
+  }
+  throw new Error('Customer not found');
+};
+
+export const updateCurrentUserProfile = async (payload) => {
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  if (!currentUser.value) throw new Error('No active session');
+  
+  if (currentUser.value.id) {
+    const idx = customers.value.findIndex(c => c.id === currentUser.value.id);
+    if (idx !== -1) {
+      customers.value[idx] = { ...customers.value[idx], ...payload };
+      customers.value = [...customers.value];
+    }
+  }
+
+  currentUser.value = { ...currentUser.value, ...payload };
+  localStorage.setItem('user_session', JSON.stringify(currentUser.value));
+  return currentUser.value;
 };
