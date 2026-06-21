@@ -1,0 +1,20 @@
+{
+    "name": "driveease/api",
+    "description": "DriveEase Car Rental System REST API",
+    "type": "project",
+    "require": {
+        "slim/slim": "^4.12",
+        "slim/psr7": "^1.6",
+        "firebase/php-jwt": "^6.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "slim/composer-plugin": true
+        }
+    }
+}
