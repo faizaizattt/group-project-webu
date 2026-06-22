@@ -13,47 +13,18 @@ class Database {
     private $conn;
 
     public function __construct() {
-        // Read database configuration from environment variables
-        $this->loadEnv();
-        
-        $this->host = getenv('DB_HOST') ?: 'localhost';
-        $this->dbName = getenv('DB_NAME') ?: 'driveease_db';
-        $this->username = getenv('DB_USER') ?: 'root';
-        $this->password = getenv('DB_PASS') !== false ? getenv('DB_PASS') : '';
-        $this->port = getenv('DB_PORT') ?: '3306';
-    }
-
-    private function loadEnv() {
-        // Search upward for the .env file
-        $paths = [
-            __DIR__ . '/../../../../.env',
-            __DIR__ . '/../../../.env',
-            __DIR__ . '/../../.env',
-            __DIR__ . '/../.env'
-        ];
-        foreach ($paths as $path) {
-            if (file_exists($path)) {
-                $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-                foreach ($lines as $line) {
-                    $line = trim($line);
-                    if ($line === '' || strpos($line, '#') === 0) {
-                        continue;
-                    }
-                    if (strpos($line, '=') !== false) {
-                        list($name, $value) = explode('=', $line, 2);
-                        $name = trim($name);
-                        $value = trim($value);
-                        // Strip quotes
-                        $value = trim($value, '"\'');
-                        
-                        putenv(sprintf('%s=%s', $name, $value));
-                        $_ENV[$name] = $value;
-                        $_SERVER[$name] = $value;
-                    }
-                }
-                break;
-            }
+        // Load database config from PHP file (reliable on shared hosting like InfinityFree)
+        // Falls back to environment variables or XAMPP defaults for local development
+        $configFile = __DIR__ . '/../../dbconfig.php';
+        if (file_exists($configFile)) {
+            require_once $configFile;
         }
+
+        $this->host     = defined('DB_HOST') ? DB_HOST : (getenv('DB_HOST') ?: 'localhost');
+        $this->dbName   = defined('DB_NAME') ? DB_NAME : (getenv('DB_NAME') ?: 'driveease_db');
+        $this->username = defined('DB_USER') ? DB_USER : (getenv('DB_USER') ?: 'root');
+        $this->password = defined('DB_PASS') ? DB_PASS : (getenv('DB_PASS') !== false ? getenv('DB_PASS') : '');
+        $this->port     = defined('DB_PORT') ? DB_PORT : (getenv('DB_PORT') ?: '3306');
     }
 
     public function getConnection(): ?PDO {

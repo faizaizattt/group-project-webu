@@ -16,6 +16,10 @@ use App\Controllers\CustomerController;
 // Create Slim App
 $app = AppFactory::create();
 
+// Set base path so Slim correctly strips /backend/public when matching routes
+// This is required when Slim is not at the server root (e.g. on InfinityFree)
+$app->setBasePath('/backend/public');
+
 // Parse JSON body
 $app->addBodyParsingMiddleware();
 

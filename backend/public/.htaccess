@@ -1,4 +1,35 @@
+##################################################
+#
+# DriveEase Backend - Apache Configuration
+# Handles CORS, routing for PHP Slim API
+#
+##################################################
+
+# Disable directory listing
+Options -Indexes
+
+# Add CORS headers at Apache level (before PHP runs)
+# This ensures headers are sent even if InfinityFree intercepts the response
+<IfModule mod_headers.c>
+    Header always set Access-Control-Allow-Origin "*"
+    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, Accept, Origin"
+    Header always set Access-Control-Max-Age "86400"
+</IfModule>
+
 RewriteEngine On
+
+# Handle OPTIONS preflight - return 200 immediately with CORS headers
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^ - [R=200,L]
+
+# Route all requests to Slim's index.php (unless file/dir exists)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.php [QSA,L]
+
+DirectoryIndex index.php index.html index.htm
+
+ErrorDocument 403 https://errors.infinityfree.net/errors/403/
+ErrorDocument 404 https://errors.infinityfree.net/errors/404/
+ErrorDocument 500 https://errors.infinityfree.net/errors/500/

@@ -1,8 +1,10 @@
 import axios from 'axios';
 
 // Create axios instance targeting the PHP Slim REST Backend
+// In production: Vercel proxies /api/* to InfinityFree (no CORS issues)
+// In development: falls back to localhost:8000
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
